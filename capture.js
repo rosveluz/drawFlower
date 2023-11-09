@@ -1,35 +1,22 @@
-const modal = document.getElementById("imageModal");
-
-function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-    var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-    return {
-        width: srcWidth * ratio,
-        height: srcHeight * ratio,
-        offsetX: (maxWidth - srcWidth * ratio) / 2,
-        offsetY: (maxHeight - srcHeight * ratio) / 2
-    };
-}
-
 async function captureCanvasAndBackground() {
-    const finalCanvas = document.createElement('canvas');
-    finalCanvas.width = 1080;
-    finalCanvas.height = 1080;
-    const ctx = finalCanvas.getContext('2d');
-
-    // Draw the background color
-    const backgroundColor = window.getComputedStyle(document.querySelector('.main-container')).backgroundColor;
-    ctx.fillStyle = backgroundColor;
-    ctx.fillRect(0, 0, 1080, 1080);
-
-    // Get the actual size of the drawing surface of 'myCanvas'
+    const video = document.querySelector('video');
     const flowerCanvas = document.getElementById('myCanvas');
-    const realWidth = flowerCanvas.width;
-    const realHeight = flowerCanvas.height;
+    const outputCanvas = document.createElement('canvas');
+    const ctx = outputCanvas.getContext('2d');
 
-    // Calculate aspect ratio fit based on actual size of 'myCanvas'
-    const aspectFit = calculateAspectRatioFit(realWidth, realHeight, finalCanvas.width, finalCanvas.height);
-    ctx.drawImage(flowerCanvas, aspectFit.offsetX, aspectFit.offsetY, aspectFit.width, aspectFit.height);
+    const { width, height } = video.getBoundingClientRect();
+    outputCanvas.width = width;
+    outputCanvas.height = height;
 
-    // Here, consider what you want to do with 'finalCanvas' after capture
-    // For example, appending it to the document, saving it, etc.
+    // Drawing video frame to the canvas
+    ctx.drawImage(video, 0, 0, width, height);
+
+    // Scaling and drawing flower canvas
+    const ratio = Math.min(width / flowerCanvas.width, height / flowerCanvas.height);
+    const x = (width - flowerCanvas.width * ratio) / 2;
+    const y = (height - flowerCanvas.height * ratio) / 2;
+    ctx.drawImage(flowerCanvas, x, y, flowerCanvas.width * ratio, flowerCanvas.height * ratio);
+
+    // Return the combined canvas data
+    return outputCanvas.toDataURL('image/png');
 }

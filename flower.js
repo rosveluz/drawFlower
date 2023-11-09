@@ -1,18 +1,15 @@
-// flower.js
+/* flower.js */
 
-// A function to call when you want to wait for the expression to stabilize
 function debounce(func, wait, immediate) {
     var timeout;
     return function() {
         var context = this, args = arguments;
-        var later = function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
             timeout = null;
             if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
+        }, wait);
+        if (immediate && !timeout) func.apply(context, args);
     };
 };
 
@@ -212,6 +209,3 @@ function updateContainerColor() {
     mainContainer.style.backgroundColor = harmony.harmony1; // Using harmony1 as an example
 }
 
-
-// Make sure to replace any direct calls to startFlowerAnimation with debouncedStartFlowerAnimation in your code.
-// debouncedStartFlowerAnimation(avgColor, expression);
