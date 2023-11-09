@@ -53,6 +53,7 @@ body {
     position: relative;  /* For potential child elements to be positioned inside of it */
     border-radius: 50%;
     /* background-color: rgba(145, 145, 145, 0.067); */
+    aspect-ratio: auto 1920 / 1920 !important;
 }
 
 #video-container {
@@ -183,7 +184,7 @@ body {
 
     #color-detection {
         width: 480px;
-        height: 360px;
+        height: 480px;
     }
     
     #video {
